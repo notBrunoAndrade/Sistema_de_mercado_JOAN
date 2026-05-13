@@ -1,14 +1,9 @@
 import { Request, Response } from "express";
-<<<<<<< HEAD
 import { connection } from "../database";
-=======
-import { prisma } from "../lib/prisma";
->>>>>>> ef8e3b32d429590b2d6f9f5534d464bc52f07370
 
 export const createUser = async (req: Request, res: Response) => {
   const { nome, email, telefone } = req.body;
 
-<<<<<<< HEAD
   await connection.query(
     `
       INSERT INTO clientes
@@ -32,29 +27,11 @@ export const getUsers = async (req: Request, res: Response) => {
   );
 
   return res.json(clientes);
-=======
-  const cliente = await prisma.cliente.create({
-    data: {
-      nome,
-      email,
-      telefone,
-    },
-  });
-
-  return res.json(cliente);
-};
-
-export const getUsers = async (req: Request, res: Response) => {
-  const cliente = await prisma.cliente.findMany();
-
-  return res.json(cliente);
->>>>>>> ef8e3b32d429590b2d6f9f5534d464bc52f07370
 };
 
 export const getUsersById = async (req: Request, res: Response) => {
   const { id } = req.params;
 
-<<<<<<< HEAD
   const [cliente] = await connection.query(
     `
       SELECT * FROM clientes
@@ -62,13 +39,6 @@ export const getUsersById = async (req: Request, res: Response) => {
     `,
     [id],
   );
-=======
-  const cliente = await prisma.cliente.findUnique({
-    where: {
-      id: Number(id),
-    },
-  });
->>>>>>> ef8e3b32d429590b2d6f9f5534d464bc52f07370
 
   return res.json(cliente);
 };
@@ -78,7 +48,6 @@ export const updateUser = async (req: Request, res: Response) => {
 
   const { nome, email, telefone } = req.body;
 
-<<<<<<< HEAD
   await connection.query(
     `
       UPDATE clientes
@@ -113,19 +82,3 @@ export const deleteUser = async (req: Request, res: Response) => {
     message: "Usuário deletado com sucesso",
   });
 };
-=======
-  const cliente = await prisma.cliente.update({
-    where: {
-      id: Number(id),
-    },
-
-    data: {
-      nome,
-      email,
-      telefone,
-    },
-  });
-
-  return res.json({cliente, message:"Usuario recebeu um update!"});
-};
->>>>>>> ef8e3b32d429590b2d6f9f5534d464bc52f07370
