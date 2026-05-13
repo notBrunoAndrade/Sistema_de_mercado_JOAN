@@ -1,35 +1,20 @@
-# 🛒 Sistema de Mercado
+# 🛒 Sistema de Mercado JOAN - Back-end
 
-Sistema web desenvolvido para gerenciamento de mercado, permitindo o controle de clientes, produtos, estoque e vendas em um ambiente moderno e intuitivo.
+API REST desenvolvida para gerenciamento de mercado, permitindo o controle de clientes, produtos, estoque e vendas.
 
-## 📌 Funcionalidades
-
-* Cadastro de clientes
-* Cadastro e edição de produtos
-* Controle de estoque
-* Registro de vendas
-* Visualização de vendas realizadas
-* Dashboard administrativo
-* Integração com API REST
-* Interface moderna e responsiva
+O sistema foi desenvolvido utilizando Node.js, Express e MySQL, seguindo uma arquitetura organizada em rotas, controladores e conexão com banco de dados.
 
 ---
 
 # 🚀 Tecnologias Utilizadas
 
-## Front-end
-
-* React
-* TypeScript
-* Vite
-* TailwindCSS
-* React Router DOM
-* Axios
-
-## Back-end
-
 * Node.js
-* API REST
+* TypeScript
+* Express
+* MySQL
+* mysql2
+* CORS
+* TSX
 
 ---
 
@@ -37,41 +22,108 @@ Sistema web desenvolvido para gerenciamento de mercado, permitindo o controle de
 
 ```bash
 src/
- ├── pages/
- │    ├── Clients/
- │    ├── Dashboard/
- │    ├── Products/
- │    └── Sales/
+ ├── controllers/
+ │    ├── clientes.ts
+ │    ├── produtos.ts
+ │    └── venda.ts
  │
- ├── routes/
- ├── services/
- ├── App.tsx
- └── main.tsx
+ ├── types/
+ │    └── saleType.ts
+ │
+ ├── database.ts
+ ├── router.ts
+ └── server.ts
 ```
 
 ---
 
-# 🖥️ Telas do Sistema
+# ⚙️ Funcionalidades da API
 
-## Dashboard
+## 👤 Clientes
 
-Painel principal com acesso rápido às funcionalidades do sistema.
+* Criar clientes
+* Listar clientes
+* Buscar cliente por ID
+* Atualizar cliente
 
-## Clientes
+## 📦 Produtos
 
-Permite cadastrar e visualizar clientes.
+* Criar produtos
+* Listar produtos
+* Buscar produto por ID
+* Atualizar produtos
+* Remover produtos
+* Controle de estoque
 
-## Produtos
+## 💰 Vendas
 
-Gerenciamento completo de produtos e estoque.
-
-## Vendas
-
-Registro de vendas com múltiplos itens e associação de clientes.
+* Criar vendas
+* Listar vendas
+* Buscar venda por ID
+* Atualização automática do estoque
+* Cálculo automático do valor total da venda
 
 ---
 
-# ⚙️ Instalação e Execução
+# 🔌 Rotas da API
+
+## Clientes
+
+| Método | Rota              |
+| ------ | ----------------- |
+| POST   | `/createUser`     |
+| GET    | `/getUsers`       |
+| GET    | `/getUsers/:id`   |
+| PUT    | `/updateUser/:id` |
+
+---
+
+## Produtos
+
+| Método | Rota                 |
+| ------ | -------------------- |
+| POST   | `/createProduct`     |
+| GET    | `/getProducts`       |
+| GET    | `/getProducts/:id`   |
+| PUT    | `/updateProduct/:id` |
+| DELETE | `/deleteProduct/:id` |
+
+---
+
+## Vendas
+
+| Método | Rota            |
+| ------ | --------------- |
+| POST   | `/createSale`   |
+| GET    | `/getSales`     |
+| GET    | `/getSales/:id` |
+
+---
+
+# 🗄️ Banco de Dados
+
+O sistema utiliza MySQL como banco de dados.
+
+Configuração localizada em:
+
+```ts
+src/database.ts
+```
+
+Exemplo:
+
+```ts
+export const connection = mysql.createPool({
+  host: "localhost",
+  user: "root",
+  password: "admin123",
+  database: "lojajoan",
+});
+```
+
+---
+
+# ▶️ Instalação e Execução
 
 ## 1️⃣ Clonar o repositório
 
@@ -81,7 +133,7 @@ git clone https://github.com/notBrunoAndrade/Sistema_de_mercado_JOAN.git
 
 ---
 
-## 2️⃣ Acessar a pasta do projeto
+## 2️⃣ Entrar na pasta do projeto
 
 ```bash
 cd Sistema_de_mercado_JOAN
@@ -89,7 +141,7 @@ cd Sistema_de_mercado_JOAN
 
 ---
 
-## 3️⃣ Instalar as dependências
+## 3️⃣ Instalar dependências
 
 ```bash
 npm install
@@ -97,71 +149,47 @@ npm install
 
 ---
 
-## 4️⃣ Executar o projeto
+## 4️⃣ Executar o servidor
 
 ```bash
 npm run dev
 ```
 
-O sistema estará disponível em:
+Servidor disponível em:
 
 ```bash
-http://localhost:5173
-```
-
----
-
-# 🔌 Integração com API
-
-A aplicação consome uma API REST configurada no arquivo:
-
-```bash
-src/services/api.ts
-```
-
-Base URL utilizada:
-
-```ts
 http://localhost:3333
 ```
 
 ---
 
-# 📦 Funcionalidades da API Utilizadas
+# 📌 Exemplo de Venda
 
-## Clientes
-
-* `GET /getUsers`
-* `POST /createUser`
-
-## Produtos
-
-* `GET /getProducts`
-* `POST /createProduct`
-* `PUT /updateProduct/:id`
-
-## Vendas
-
-* `GET /getSales`
-* `POST /createSale`
-
----
-
-# 🎨 Interface
-
-O sistema possui:
-
-* Interface responsiva
-* Tema dark moderno
-* Componentes organizados
-* Navegação dinâmica
-* Experiência intuitiva para gerenciamento
+```json
+{
+  "clienteId": 1,
+  "itens": [
+    {
+      "produtoId": 1,
+      "quantidade": 2
+    },
+    {
+      "produtoId": 3,
+      "quantidade": 1
+    }
+  ]
+}
+```
 
 ---
 
-# 📖 Objetivo do Projeto
+# 🛡️ Regras Implementadas
 
-O objetivo do sistema é facilitar o gerenciamento de um mercado através de uma plataforma web simples, moderna e eficiente, permitindo melhor controle administrativo e organização das operações de vendas, clientes e produtos.
+* Verificação de estoque disponível
+* Validação de produtos existentes
+* Atualização automática do estoque após venda
+* Cálculo automático do valor total
+* Organização modular da aplicação
 
 ---
 
