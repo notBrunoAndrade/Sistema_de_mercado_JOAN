@@ -1,5 +1,9 @@
 import { Request, Response } from "express";
+<<<<<<< HEAD
 import { connection } from "../database";
+=======
+import { prisma } from "../lib/prisma";
+>>>>>>> ef8e3b32d429590b2d6f9f5534d464bc52f07370
 import { CreateSaleBody } from "../types/saleType";
 
 export const createSale = async (req: Request, res: Response) => {
@@ -7,6 +11,7 @@ export const createSale = async (req: Request, res: Response) => {
 
   let valorTotal = 0;
 
+<<<<<<< HEAD
   // =========================
   // VALIDAR PRODUTOS
   // E CALCULAR TOTAL
@@ -22,6 +27,14 @@ export const createSale = async (req: Request, res: Response) => {
     );
 
     const produto = produtoResult[0];
+=======
+  for (const item of itens) {
+    const produto = await prisma.produto.findUnique({
+      where: {
+        id: item.produtoId,
+      },
+    });
+>>>>>>> ef8e3b32d429590b2d6f9f5534d464bc52f07370
 
     if (!produto) {
       return res.status(404).json({
@@ -38,6 +51,7 @@ export const createSale = async (req: Request, res: Response) => {
     valorTotal += produto.preco * item.quantidade;
   }
 
+<<<<<<< HEAD
   // =========================
   // CRIAR VENDA
   // =========================
@@ -238,3 +252,130 @@ export const getSaleById = async (req: Request, res: Response) => {
     itens,
   });
 };
+=======
+  const venda = await prisma.venda.create({
+    data: {
+      clienteId,
+      valorTotal,
+    },
+  });
+
+  for (const item of itens) {
+    const produto = await prisma.produto.findUnique({
+      where: {
+        id: item.produtoId,
+      },
+    });
+
+    await prisma.itemVenda.create({
+      data: {
+        vendaId: venda.id,
+        produtoId: item.produtoId,
+        quantidade: item.quantidade,
+        precoUnitario: produto!.preco,
+      },
+    });
+
+    await prisma.produto.update({
+      where: {
+        id: item.produtoId,
+      },
+
+      data: {
+        estoque: {
+          decrement: item.quantidade,
+        },
+      },
+    });
+  }
+
+  const vendaCompleta = await prisma.venda.findUnique({
+    where: {
+      id: venda.id,
+    },
+
+    include: {
+      cliente: true,
+
+      itens: {
+        include: {
+          produto: true,
+        },
+      },
+    },
+  });
+
+  return res.status(201).json(vendaCompleta);
+};
+
+export const getSales = async (req: Request, res: Response) => {
+  const vendas = await prisma.venda.findMany({
+    select: {
+      id: true,
+      valorTotal: true,
+      dataVenda: true,
+
+      cliente: {
+        select: {
+          id: true,
+          nome: true,
+        },
+      },
+
+      itens: {
+        select: {
+          quantidade: true,
+          precoUnitario: true,
+
+          produto: {
+            select: {
+              id: true,
+              nome: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  return res.json(vendas);
+};
+
+export const getSaleById = async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  const venda = await prisma.venda.findUnique({
+    where: {
+      id: Number(id),
+    },
+    select: {
+      id: true,
+      valorTotal: true,
+      dataVenda: true,
+
+      cliente: {
+        select: {
+          id: true,
+          nome: true,
+        },
+      },
+
+      itens: {
+        select: {
+          quantidade: true,
+          precoUnitario: true,
+
+          produto: {
+            select: {
+              id: true,
+              nome: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  return res.json(venda);
+};
+>>>>>>> ef8e3b32d429590b2d6f9f5534d464bc52f07370
